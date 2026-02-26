@@ -109,6 +109,10 @@ PLIST
 
 echo "Info.plist written"
 
+# --- Codesign app bundle (ad-hoc) ---
+echo "Codesigning (ad-hoc)..."
+codesign --force --deep -s - "$APP_DIR"
+
 # --- Create styled DMG ---
 echo "Creating styled DMG..."
 STAGING="$BUILD_DIR/dmg-staging"
