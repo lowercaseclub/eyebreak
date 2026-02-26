@@ -10,7 +10,13 @@ A macOS menu bar app that reminds you to look away from the screen every 20 minu
 
 Download the latest DMG from [Releases](https://github.com/lowercaseclub/eyebreak/releases), open it, and drag EyeBreak to Applications.
 
-> **macOS Gatekeeper:** The app is not notarized, so macOS will block it on first launch. **Right-click** (or Control-click) the app and choose **Open**, then click Open in the dialog. You only need to do this once. Alternatively, run `xattr -cr /Applications/EyeBreak.app` in Terminal.
+> [!WARNING]
+> **macOS will block EyeBreak on first launch** because the app is not notarized. To open it:
+> 1. Open EyeBreak — macOS will show a blocked message
+> 2. Go to **System Settings → Privacy & Security**
+> 3. Scroll down and click **Open Anyway** next to the EyeBreak message
+>
+> You only need to do this once. Alternatively, run `xattr -cr /Applications/EyeBreak.app` in Terminal before opening.
 
 The app runs in the menu bar — no Dock icon. Look for the 👁 icon.
 
