@@ -55,22 +55,25 @@ DMG_URL="https://github.com/${REPO}/releases/download/v${NEW_VERSION}/EyeBreak.d
 
 # 5. Update appcast.xml
 echo "Updating appcast.xml..."
-NEW_ITEM="        <item>
+ITEM_TMP=$(mktemp)
+cat > "$ITEM_TMP" <<ITEM_EOF
+        <item>
             <title>Version ${NEW_VERSION}</title>
             <pubDate>${PUB_DATE}</pubDate>
             <enclosure
-                url=\"${DMG_URL}\"
+                url="${DMG_URL}"
                 ${ED_SIGNATURE}
                 ${LENGTH}
-                type=\"application/octet-stream\"
-                sparkle:version=\"${NEW_VERSION}\"
-                sparkle:shortVersionString=\"${NEW_VERSION}\"
+                type="application/octet-stream"
+                sparkle:version="${NEW_VERSION}"
+                sparkle:shortVersionString="${NEW_VERSION}"
             />
-        </item>"
+        </item>
+ITEM_EOF
 
-# Insert new item after </language> line using awk
-awk -v item="$NEW_ITEM" '/<\/language>/{print; print item; next}1' "$APPCAST" > "${APPCAST}.tmp"
-mv "${APPCAST}.tmp" "$APPCAST"
+# Insert new item after </language> line
+sed -i '' "/<\/language>/r ${ITEM_TMP}" "$APPCAST"
+rm "$ITEM_TMP"
 
 # 6. Commit and tag
 echo "Committing..."
