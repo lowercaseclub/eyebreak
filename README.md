@@ -93,4 +93,4 @@ When a new version is available, Sparkle shows an update dialog. Users click Upd
 
 ## License
 
-Internal tool by [Lowercase](https://lowercase.club).
+[MIT](LICENSE)
