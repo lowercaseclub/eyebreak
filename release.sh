@@ -68,10 +68,9 @@ NEW_ITEM="        <item>
             />
         </item>"
 
-# Insert new item at the top of the channel (after <language> line)
-sed -i '' "/<\/language>/a\\
-${NEW_ITEM}
-" "$APPCAST"
+# Insert new item after </language> line using awk
+awk -v item="$NEW_ITEM" '/<\/language>/{print; print item; next}1' "$APPCAST" > "${APPCAST}.tmp"
+mv "${APPCAST}.tmp" "$APPCAST"
 
 # 6. Commit and tag
 echo "Committing..."
