@@ -40,6 +40,14 @@ teardown() {
     [ -d "$SCRIPT_DIR/build/EyeBreak.app/Contents/Frameworks/Sparkle.framework" ]
 }
 
+@test "AppIcon.icns exists in app bundle Resources" {
+    [ -f "$SCRIPT_DIR/build/EyeBreak.app/Contents/Resources/AppIcon.icns" ]
+}
+
+@test "Info.plist contains CFBundleIconFile" {
+    grep -q "CFBundleIconFile" "$SCRIPT_DIR/build/EyeBreak.app/Contents/Info.plist"
+}
+
 @test "build.sh produces EyeBreak.dmg" {
     [ -f "$SCRIPT_DIR/build/EyeBreak.dmg" ]
 }

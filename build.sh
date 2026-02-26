@@ -70,6 +70,11 @@ echo "Binary compiled: $BINARY"
 echo "Embedding Sparkle.framework..."
 cp -a "$SPARKLE_DIR/Sparkle.framework" "$FRAMEWORKS/"
 
+# --- Copy app icon ---
+RESOURCES="$CONTENTS/Resources"
+mkdir -p "$RESOURCES"
+cp "$SCRIPT_DIR/assets/AppIcon.icns" "$RESOURCES/"
+
 # --- Write Info.plist ---
 cat > "$CONTENTS/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -90,6 +95,8 @@ cat > "$CONTENTS/Info.plist" <<PLIST
     <string>APPL</string>
     <key>LSMinimumSystemVersion</key>
     <string>13.0</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
     <key>LSUIElement</key>
     <true/>
     <key>SUFeedURL</key>
@@ -102,8 +109,8 @@ PLIST
 
 echo "Info.plist written"
 
-# --- Create DMG ---
-echo "Creating DMG..."
+# --- Create styled DMG ---
+echo "Creating styled DMG..."
 STAGING="$BUILD_DIR/dmg-staging"
 rm -rf "$STAGING"
 mkdir -p "$STAGING"
@@ -111,14 +118,54 @@ cp -a "$APP_DIR" "$STAGING/"
 ln -s /Applications "$STAGING/Applications"
 
 DMG_PATH="$BUILD_DIR/EyeBreak.dmg"
-rm -f "$DMG_PATH"
-hdiutil create "$DMG_PATH" \
-    -volname "EyeBreak" \
-    -srcfolder "$STAGING" \
-    -ov \
-    -format UDZO \
-    -quiet
+DMG_RW="$BUILD_DIR/EyeBreak_rw.dmg"
+rm -f "$DMG_PATH" "$DMG_RW"
 
+# Detach any existing EyeBreak volumes to avoid conflicts
+for dev in $(hdiutil info | grep '/Volumes/EyeBreak' | awk '{print $1}' || true); do
+    hdiutil detach "$dev" 2>/dev/null || true
+done
+
+# Create read-write DMG
+hdiutil create "$DMG_RW" -volname "EyeBreak" -srcfolder "$STAGING" -ov -format UDRW -quiet
+
+# Mount it and capture mount point
+MOUNT_OUTPUT=$(hdiutil attach -readwrite -noverify "$DMG_RW")
+DEVICE=$(echo "$MOUNT_OUTPUT" | grep '/Volumes/' | awk '{print $1}')
+MOUNT_POINT=$(echo "$MOUNT_OUTPUT" | grep '/Volumes/' | sed 's/.*\(\/Volumes\/.*\)/\1/' | xargs)
+
+# Add background image
+mkdir -p "$MOUNT_POINT/.background"
+cp "$SCRIPT_DIR/assets/dmg-background.png" "$MOUNT_POINT/.background/background.png"
+
+# Style with AppleScript
+osascript <<'APPLESCRIPT'
+tell application "Finder"
+    tell disk "EyeBreak"
+        open
+        set current view of container window to icon view
+        set toolbar visible of container window to false
+        set statusbar visible of container window to false
+        set bounds of container window to {100, 100, 700, 500}
+        set opts to icon view options of container window
+        set icon size of opts to 128
+        set arrangement of opts to not arranged
+        set background picture of opts to file ".background:background.png"
+        set position of item "EyeBreak.app" to {150, 190}
+        set position of item "Applications" to {450, 190}
+        close
+        open
+        update without registering applications
+        delay 2
+    end tell
+end tell
+APPLESCRIPT
+
+# Finalize — convert to compressed read-only DMG
+sync
+hdiutil detach "$DEVICE" -quiet
+hdiutil convert "$DMG_RW" -format UDZO -o "$DMG_PATH" -quiet
+rm -f "$DMG_RW"
 rm -rf "$STAGING"
 echo "DMG created: $DMG_PATH"
 

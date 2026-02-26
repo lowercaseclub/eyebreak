@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/icon.png" width="128" alt="EyeBreak icon">
+</p>
+
 # EyeBreak
 
 A macOS menu bar app that reminds you to look away from the screen every 20 minutes, following the [20-20-20 rule](https://www.healthline.com/health/eye-health/20-20-20-rule). Smart enough to wait when you're in a meeting.
