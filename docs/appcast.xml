@@ -5,6 +5,18 @@
         <description>Appcast feed for EyeBreak</description>
         <language>en</language>
         <item>
+            <title>Version 1.1.1</title>
+            <pubDate>Thu, 26 Feb 2026 21:17:10 +1100</pubDate>
+            <enclosure
+                url="https://github.com/lowercaseclub/eyebreak/releases/download/v1.1.1/EyeBreak.dmg"
+                sparkle:edSignature="UvusFgIUFWopc15EMdWC8uLuNJ4YG8Uhbhz6bD0NebEGgpqHI2Riou+1WJoXfNAp+VyKX1mjWlcv4xsTS5KNBQ=="
+                length="3968431"
+                type="application/octet-stream"
+                sparkle:version="1.1.1"
+                sparkle:shortVersionString="1.1.1"
+            />
+        </item>
+        <item>
             <title>Version 1.1</title>
             <pubDate>Thu, 26 Feb 2026 21:07:51 +1100</pubDate>
             <enclosure
