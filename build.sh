@@ -95,7 +95,7 @@ cat > "$CONTENTS/Info.plist" <<PLIST
     <key>SUFeedURL</key>
     <string>${APPCAST_URL}</string>
     <key>SUPublicEDKey</key>
-    <string>${SU_PUBLIC_ED_KEY:-REPLACE_WITH_PUBLIC_KEY}</string>
+    <string>YAhSP9JH/+bBp46nvO3NGsibEtyCVHWVBz21DW2Tn48=</string>
 </dict>
 </plist>
 PLIST
