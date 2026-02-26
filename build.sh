@@ -12,7 +12,7 @@ MACOS="$CONTENTS/MacOS"
 FRAMEWORKS="$CONTENTS/Frameworks"
 BINARY="$MACOS/EyeBreak"
 
-VERSION="1.0"
+VERSION="1.1"
 SPARKLE_VERSION="2.8.0"
 SPARKLE_DIR="$SCRIPT_DIR/deps/Sparkle"
 APPCAST_URL="https://lowercaseclub.github.io/eyebreak/appcast.xml"
